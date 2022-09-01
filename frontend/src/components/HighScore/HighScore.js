@@ -1,0 +1,93 @@
+import { useEffect, useState } from "react";
+import "./HighScore.css";
+
+/*
+- 
+*/
+
+function HighScore(props) {
+//Fazer uma solicitação para o back trazer as maiores pontuações
+//endponit: [get] localhost:3333/pontuacoes
+//solicitação - requisição http
+//para fazer requisições, temos algumas bibliotecas
+//fetch
+//axios
+//e etc
+
+
+const [itens, setItens] = useState(undefined);
+
+useEffect(function(){
+  //Declaração da função
+  async function carregarPontuacoes(){
+  
+    //Fazemos a requisição e recebemos a resposta
+   const response = await fetch("http://localhost:3333/pontuacoes");
+  
+   //Extraimos o JSON do corpo da resposta
+   const body = await response.json();
+  
+   //Atualizamos o estato itens com os valores recebidos
+   //ao atualizar o estado, o react renderiza o componente novamente
+   setItens(body);
+  }
+
+  //Executamos a função
+  carregarPontuacoes();
+}, []);
+
+console.log(itens);
+
+const itensEstaoCarregando = itens === undefined;
+
+async function salvarPontuacao(event) {
+  event.preventDefault();
+
+    const form = event.target;
+    const name = form.name.value;
+
+  const response = await fetch ("http://localhost:3333/pontuacoes",{
+    method: "POST",
+    body: JSON.stringify({nome: name, pontos: props.pontos}),
+    headers: {
+      "Content-type": "application/json",
+    },
+  });
+  const body = await response.json();
+
+  console.log("Pontuação salva com sucesso:", body);
+}
+
+  return (
+    <div className="HighScore">
+      <div>
+        Você fez <b>{props.pontos}</b> pontos!
+      </div>
+
+      <div>
+        <h1>HighScore</h1>
+
+        {itensEstaoCarregando ? (
+          <div>Carregando...</div>
+          ) : (
+      <div>
+        {itens.map((item, index) => (
+        <div key={`score_${index}`}>
+          {item.nome} - {item.pontos}
+        </div>
+        ))}
+        </div>)}
+      </div>
+
+      <div>
+        <h1>Registre sua pontuação!</h1>
+        <form onSubmit={salvarPontuacao}>
+          <input type="text" name="name" placeholder="Digite o seu nome..." />
+          <input type="submit" value="Enviar" />
+        </form>
+      </div>
+    </div>
+  );
+}
+
+export default HighScore;
