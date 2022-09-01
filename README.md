@@ -1,4 +1,4 @@
-# jornada-fullstack
+# [JORNADA FULLSTACK] - Samsung Ocena
 
 ## Projeto desenvolvido no curso de desenvolvimento full stack do Samsung Ocean
 ## Ministrado pelo professor Paulo Salvatore
